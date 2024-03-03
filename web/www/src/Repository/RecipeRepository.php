@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Recipe;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<Recipe>
+ *
+ * @method Recipe|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Recipe|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Recipe[]    findAll()
+ * @method Recipe[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class RecipeRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Recipe::class);
+    }
+
+    public function insertRecipes(): void
+    {
+        $recipes = [
+            'recipe1',
+            'recipe2',
+            'recipe3',
+            'recipe4',
+            'recipe5',
+        ];
+
+        foreach ($recipes as $recipe) {
+            $newRecipe = new Recipe();
+            $newRecipe->setName($recipe);
+            $this->getEntityManager()->persist($newRecipe);
+        }
+
+        $this->getEntityManager()->flush();
+    }
+
+//    /**
+//     * @return Recipe[] Returns an array of Recipe objects
+//     */
+//    public function findByExampleField($value): array
+//    {
+//        return $this->createQueryBuilder('r')
+//            ->andWhere('r.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->orderBy('r.id', 'ASC')
+//            ->setMaxResults(10)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+//    public function findOneBySomeField($value): ?Recipe
+//    {
+//        return $this->createQueryBuilder('r')
+//            ->andWhere('r.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->getQuery()
+//            ->getOneOrNullResult()
+//        ;
+//    }
+}

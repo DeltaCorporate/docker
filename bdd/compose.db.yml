@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  adminer:
+    image: deltacorporate/bdd-adminer:1.0
+    container_name: adminer
+#     build:
+#       context: ./docker/adminer
+#       dockerfile: Dockerfile
+    volumes:
+      - ./docker/adminer/src/adminer-4.8.1.php:/srv/index.php:ro # -- read-only
+      - ./docker/adminer/src/adminer.css:/srv/adminer.css:ro # -- read-only
+    depends_on:
+      - postgres
+    ports:
+      - 81:80
+    networks:
+      - net-for-back
+
+  postgres:
+    image: deltacorporate/bdd-postgres:1.0
+    container_name: postgres
+#     build:
+#       context: ./docker/postgres
+#       dockerfile: Dockerfile
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    networks:
+      - net-for-back
+
+networks:
+  net-for-front:
+    name: front-web
+  net-for-back:
+    name: back-db

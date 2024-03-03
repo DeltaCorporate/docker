@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    volumes:
+      - ./docker/nginx/nginx.conf/default.conf:/etc/nginx/conf.d/default.conf
+      - ./www:/var/www/html/
+    ports:
+      - 8080:80
+    depends_on:
+      - php
+    networks:
+      - net-for-front
+
+  php:
+    image: deltacorporate/web-php:1.0
+    container_name: php
+#     build:
+#       context: ./docker/php
+#       dockerfile: Dockerfile
+    volumes:
+      - ./www:/var/www/html/
+    networks:
+      - net-for-front
+      - net-for-back
+
+  composer:
+    image: deltacorporate/web-composer:1.0
+    container_name: composer
+#     build:
+#       context: ./docker/composer
+#       dockerfile: Dockerfile
+    volumes:
+      - ./www:/var/www/html/
+    command: composer install --prefer-dist
+    networks:
+      - net-for-front
+
+networks:
+  net-for-front:
+    name: front-web
+  net-for-back:
+    name: back-db
